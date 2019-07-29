@@ -64,10 +64,17 @@
 
                     download(e.target.response, newOptions);
                 };
-                setTimeout(function () {
-                    ajax.send();
-                }, 0); // allows setting custom ajax headers using the return:
-                return ajax;
+                return new Promise(function (resolve, reject) {
+                  ajax.onloadend = function () {
+                    resolve(ajax);
+                  };
+
+                  ajax.onerror = function () {
+                    reject(ajax);
+                  };
+
+                  ajax.send();
+                });
             } // end if valid url?
         } // end if url?
 
